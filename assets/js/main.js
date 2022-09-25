@@ -1,13 +1,12 @@
-function main() {
-	let	grid;
-	let	width;
-	let	squares;
-	let	startBtn;
-	let	scoreDisplay;
+import { shapesTetrominos } from "./shapesTetrominos.js"
 
-	width = 10;
-	grid = document.querySelector('.grid');
-	squares = Array.from(document.querySelectorAll('.grid div'));
+function main() {
+	const	WIDTH = 10;;
+	const	GRID = document.querySelector('.grid');;
+	const	SQUARES = Array.from(document.querySelectorAll('.grid div'));;
+	let		startBtn;
+	let		scoreDisplay;
+	const	theTetrominoes = shapesTetrominos(WIDTH);
 }
 
 document.addEventListener("DOMContentLoaded", main)
