@@ -58,26 +58,105 @@ function DeleteTetromino() {
 	}
 }
 
-function HandleKeyPress(key) {
-	if (key.keyCode === 65) {
-		direction = DIRECTION.LEFT;
-		if (!HittingTheWall()) {
-			DeleteTetromino();
-			startX--;
-			DrawTetromino();
+function CheckForHorizontalCollision() {
+	let	tetrominoCopy = curTetromino;
+	let	collison = false;
+
+	for (let i = 0; i < tetrominoCopy.length; i++) {
+		let	square = tetrominoCopy[i];
+		let	x = square[0] + startX;
+		let	y = square[1] + startY;
+		if (direction === DIRECTION.LEFT) {
+			x--;
+		} else if (direction === DIRECTION.RIGHT) {
+			x++;
 		}
-	} else if (key.keyCode === 68) {
-		direction = DIRECTION.RIGHT;
-		if (!HittingTheWall()) {
-			DeleteTetromino();
-			startX++;
-			DrawTetromino();
+		var	stoppedShapeArray = stoppedShapeArray[x][y];
+		if (typeof stoppedShapeArray === 'string') {
+			collison = true;
+			break ;
 		}
-	} else if (key.keyCode === 83) {
-		direction = DIRECTION.DOWN;
+	}
+	return collison;
+}
+
+function CheckForVerticalCollision() {
+	let	tetrominoCopy = curTetromino;
+	let	collison = false;
+
+	for (let i = 0; i < tetrominoCopy.length; i++) {
+		let	square = tetrominoCopy[i];
+		let	x = square[0] + startX;
+		let	y = square[1] + startY;
+		if (direction === DIRECTION.DOWN) {
+			y++;
+		}
+		if (gameBoardArray[x][y + 1] === 1) {
+			if (typeof stoppedShapeArray[x][y + 1] === 'string') {
+				DeleteTetromino();
+				startY;
+				DrawTetromino();
+				collison = true;
+				break ;
+			}
+			if (y >= 20) {
+				collison = true;
+				break ;
+			}
+		}
+		if (collison) {
+			if (startY <= 2) {
+				winOrLose = "Game Over";
+				ctx.fillStyle = 'white';
+				ctx.fillRect(310, 242, 140, 30);
+				ctx.fillStyle = 'black';
+				ctx.fillText(winOrLose, 310, 261);
+			} else {
+				for (let i = 0; i < tetrominoCopy.length; i++) {
+					let	square = tetrominoCopy[i];
+					let	x = square[0] + startX;
+					let	y = square[1] + startY;
+					stoppedShapeArray[x][y] = curTetrominoColor;
+				}
+				checkForCompletedRows();
+				CreateTetromino();
+				direction = DIRECTION.IDLE;
+				startX = 4;
+				startY = 0;
+				DrawTetromino();
+			}
+		}
+	}
+}
+
+function MoveTetrominoDown() {
+	direction = DIRECTION.DOWN;
+	if (!CheckForVerticalCollision()){
 		DeleteTetromino();
 		startY++;
 		DrawTetromino();
+	}
+}
+
+function HandleKeyPress(key) {
+	if (winOrLose != "Game Over") {
+		if (key.keyCode === 65) {
+			direction = DIRECTION.LEFT;
+			if (!HittingTheWall() && !CheckForVerticalCollision()) {
+				DeleteTetromino();
+				startX--;
+				DrawTetromino();
+			}
+		} else if (key.keyCode === 68) {
+			direction = DIRECTION.RIGHT;
+			if (!HittingTheWall() && !CheckForVerticalCollision()) {
+				DeleteTetromino();
+				startX++;
+				DrawTetromino();
+			}
+		} else if (key.keyCode === 83) {
+			MoveTetrominoDown();
+		}
 	}
 }
 
