@@ -1,13 +1,10 @@
-.grid {
-	width: 200px;
-	height: 400px;
-	display: flex;
-	flex-wrap: wrap;
-	background-color: yellow;
+body {
+	text-align: center;
+	background: #fff;
 }
 
-.grid div {
-	height: 20px;
-	width: 20px;
-	background-color: red;
+#my-canvas {
+	background: #fff;
+	margin-left: 10px;
+	margin-top: 10px;
 }
